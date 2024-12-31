@@ -112,38 +112,45 @@ void render_logo(void) {
 
 void render_layer_helper_fun(uint8_t start_line, const char *data, uint8_t gap_w, uint8_t l) {
     uint8_t j = 0, k = 0;
+    uint8_t logo_w = 0; // 32
     for (j = 0; j < l; ++j) {      // font index
         for (k = 0; k < 12; ++k) { // font byte index
             //                                        base + logo_w(32) + gap_w(12) +l*font_w(12)+current_byte_index
-            oled_write_raw_byte(pgm_read_byte(&ext_big_font[pgm_read_byte(&data[j]) - 0x20][k]), start_line * 2 * 128 + 32 + gap_w + j * 12 + k);
-            oled_write_raw_byte(pgm_read_byte(&ext_big_font[pgm_read_byte(&data[j]) - 0x20][k + 12]), start_line * 2 * 128 + 128 + 32 + gap_w + j * 12 + k);
+            oled_write_raw_byte(pgm_read_byte(&ext_big_font[pgm_read_byte(&data[j]) - 0x20][k]), start_line * 2 * 128 + logo_w + gap_w + j * 12 + k);
+            oled_write_raw_byte(pgm_read_byte(&ext_big_font[pgm_read_byte(&data[j]) - 0x20][k + 12]), start_line * 2 * 128 + 128 + logo_w + gap_w + j * 12 + k);
         }
     }
     for (j = 0; j < gap_w; ++j) {
-        oled_write_raw_byte(pgm_read_byte(&blank_block), start_line * 2 * 128 + 32 + j);
-        oled_write_raw_byte(pgm_read_byte(&blank_block), start_line * 2 * 128 + 32 + gap_w + l * 12 + j);
+        oled_write_raw_byte(pgm_read_byte(&blank_block), start_line * 2 * 128 + logo_w + j);
+        oled_write_raw_byte(pgm_read_byte(&blank_block), start_line * 2 * 128 + logo_w + gap_w + l * 12 + j);
 
-        oled_write_raw_byte(pgm_read_byte(&blank_block), start_line * 2 * 128 + 128 + 32 + j);
-        oled_write_raw_byte(pgm_read_byte(&blank_block), start_line * 2 * 128 + 128 + 32 + gap_w + l * 12 + j);
+        oled_write_raw_byte(pgm_read_byte(&blank_block), start_line * 2 * 128 + 128 + logo_w + j);
+        oled_write_raw_byte(pgm_read_byte(&blank_block), start_line * 2 * 128 + 128 + logo_w + gap_w + l * 12 + j);
     }
 }
 void render_layer(uint8_t layer) {
-    render_layer_helper_fun(0, PSTR("LAYER:"), 12, 6);
+    oled_write_P(PSTR("Layer: "), false);
+    render_layer_helper_fun(0, PSTR("LAYER:"), 0, 6);
     switch (layer) {
         case 0:
-            render_layer_helper_fun(1, PSTR("0:BASE"), 12, 6);
-            break;
+            render_layer_helper_fun(1, PSTR("0:BASE     "), 0, 11);
+//            oled_write_P(PSTR("0:BASE\n"), false);
+			break;
         case 1:
-            render_layer_helper_fun(1, PSTR("1:FN  "), 12, 6);
+            render_layer_helper_fun(1, PSTR("1:FN       "), 0, 11);
+//            oled_write_P(PSTR("1:FN\n"), false);
             break;
         case 2:
-            render_layer_helper_fun(1, PSTR("CONTROL"), 0, 8);
+            render_layer_helper_fun(1, PSTR("2:CONTROL  "), 0, 11);
+//            oled_write_P(PSTR("2:CONTROL\n"), false);
             break;
         case 3:
-            render_layer_helper_fun(1, PSTR("UNUSED"), 0, 8);
+            render_layer_helper_fun(1, PSTR("3:UNUSED   "), 0, 11);
+//            oled_write_P(PSTR("3:UNUSED\n"), false);
             break;
         default:
-            render_layer_helper_fun(1, PSTR("UNKNOWN"), 0, 8);
+            render_layer_helper_fun(1, PSTR("UNKNOWN    "), 0, 11);
+//            oled_write_P(PSTR("UNKNOWN\n"), false);
             break;
     }
 }
@@ -180,11 +187,12 @@ bool oled_task_kb(void) {
     if (!oled_task_user()) {
         return false;
     }
-    render_logo();
+//    render_logo();
     if (is_keyboard_left()) {
         render_layer(biton32(layer_state));
     } else {
 //        render_cur_input();
+        render_layer(biton32(layer_state));
     }
     return false;
 }
