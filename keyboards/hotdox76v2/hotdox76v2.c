@@ -112,7 +112,7 @@ void render_logo(void) {
 
 void render_layer_helper_fun(uint8_t start_line, const char *data, uint8_t gap_w, uint8_t l) {
     uint8_t j = 0, k = 0;
-    uint8_t logo_w = 0; // 32
+    uint8_t logo_w = 0; // used to be 32 for camel logo
     for (j = 0; j < l; ++j) {      // font index
         for (k = 0; k < 12; ++k) { // font byte index
             //                                        base + logo_w(32) + gap_w(12) +l*font_w(12)+current_byte_index
@@ -129,27 +129,28 @@ void render_layer_helper_fun(uint8_t start_line, const char *data, uint8_t gap_w
     }
 }
 void render_layer(uint8_t layer) {
-    oled_write_P(PSTR("Layer: "), false);
-    render_layer_helper_fun(0, PSTR("LAYER:"), 0, 6);
+    uint8_t gap_w = 2;
+    render_layer_helper_fun(0, PSTR("LAYER:    "), gap_w, 10);
+//    oled_write_P(PSTR("Layer: "), false);
     switch (layer) {
         case 0:
-            render_layer_helper_fun(1, PSTR("0:BASE     "), 0, 11);
+            render_layer_helper_fun(1, PSTR("0:BASE    "), gap_w, 10);
 //            oled_write_P(PSTR("0:BASE\n"), false);
 			break;
         case 1:
-            render_layer_helper_fun(1, PSTR("1:FN       "), 0, 11);
+            render_layer_helper_fun(1, PSTR("1:FN      "), gap_w, 10);
 //            oled_write_P(PSTR("1:FN\n"), false);
             break;
         case 2:
-            render_layer_helper_fun(1, PSTR("2:CONTROL  "), 0, 11);
+            render_layer_helper_fun(1, PSTR("2:CONTROL "), gap_w, 10);
 //            oled_write_P(PSTR("2:CONTROL\n"), false);
             break;
         case 3:
-            render_layer_helper_fun(1, PSTR("3:UNUSED   "), 0, 11);
+            render_layer_helper_fun(1, PSTR("3:UNUSED  "), gap_w, 10);
 //            oled_write_P(PSTR("3:UNUSED\n"), false);
             break;
         default:
-            render_layer_helper_fun(1, PSTR("UNKNOWN    "), 0, 11);
+            render_layer_helper_fun(1, PSTR("UNKNOWN   "), gap_w, 10);
 //            oled_write_P(PSTR("UNKNOWN\n"), false);
             break;
     }
