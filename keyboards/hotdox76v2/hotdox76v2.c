@@ -127,13 +127,16 @@ void render_layer(uint8_t layer) {
             oled_show(1, PSTR("0:BASE"), gap_w, len, 6, true);
 			break;
         case 1:
-            oled_show(1, PSTR("1:FN"), gap_w, len, 4, true);
-            break;
+            oled_show(1, PSTR("1:NUMBERS"), gap_w, len, 9, true);
+			break;
         case 2:
-            oled_show(1, PSTR("2:CONTROL"), gap_w, len, 9, true);
+            oled_show(1, PSTR("2:FN"), gap_w, len, 4, true);
             break;
         case 3:
-            oled_show(1, PSTR("3:UNUSED"), gap_w, len, 8, true);
+            oled_show(1, PSTR("3:CONTROL"), gap_w, len, 9, true);
+            break;
+        case 4:
+            oled_show(1, PSTR("4:UNUSED"), gap_w, len, 8, true);
             break;
         default:
             oled_show(1, PSTR("UNKNOWN"), gap_w, len, 7, true);
