@@ -8,6 +8,16 @@
 #include "oled_font_lib/logo2.h"
 #include "oled_font_lib/ext_font.h"
 
+typedef enum {
+    BASE,
+    SYMBOLS,
+    FN,
+    CONTROL
+} my_layers_t;
+
+void keyboard_post_init_user(void) {
+    layer_on(SYMBOLS);
+}
 
 #ifdef RGB_MATRIX_ENABLE
 // clang-format off
@@ -85,22 +95,18 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 
     for (int i = led_min; i < led_max; i++) {
         rgb_t i_color = rgb;
-        // control layer
-        if ((i == 0 || (i >= 34 && i < 38) || (i >= 75 && i < 81)) && layer_state & (1 << 3)) {
+
+        if ((i == 0 || (i >= 34 && i < 38) || (i >= 75 && i < 81)) && layer_state & (1 << CONTROL)) {
             i_color = ctrl_rgb;
         } else if ((i >= 1 && i < 7) || (i >= 46 && i < 50)) {
-            // fn
-            if (layer_state & (1 << 2)) {
+            if (layer_state & (1 << FN)) {
                 i_color = hl_rgb;
-            // numbers
-            } else if (layer_state & (1 << 1)) {
-                i_color = desat_rgb;
-            // symbols
-            } else {
+            } else if (layer_state & (1 << SYMBOLS)) {
                 i_color = nav_rgb;
+            } else {
+                i_color = desat_rgb;
             }
-        // fn
-        } else if (i >= 44 && i < 46 && layer_state & (1 << 2)) {
+        } else if (i >= 44 && i < 46 && layer_state & (1 << FN)) {
             i_color = hl_rgb;
         // arrows
         } else if (i == 68 || i == 70 || i == 71 || i == 72) {
@@ -183,7 +189,7 @@ void render_layer(uint8_t layer) {
             oled_show(1, PSTR("0:BASE"), gap_w, len, 6, true);
 			break;
         case 1:
-            oled_show(1, PSTR("1:NUMBERS"), gap_w, len, 9, true);
+            oled_show(1, PSTR("1:SYMBOLS"), gap_w, len, 9, true);
 			break;
         case 2:
             oled_show(1, PSTR("2:FN"), gap_w, len, 4, true);

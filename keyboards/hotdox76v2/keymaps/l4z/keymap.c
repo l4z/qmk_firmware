@@ -23,8 +23,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      *                              └───┴───┴───┘ └───┴───┴───┘
      */
     [0] = LAYOUT_ergodox_pretty(
-//        KC_ESC,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,              KC_7,    KC_8,    KC_9,    KC_0, KC_MINS,  KC_EQL, KC_BSPC,
-        KC_ESC, KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC, KC_CIRC,           KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_MINS,  KC_EQL, KC_BSPC,
+//        KC_ESC, KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC, KC_CIRC,           KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_MINS,  KC_EQL, KC_BSPC,
+        KC_ESC,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,              KC_7,    KC_8,    KC_9,    KC_0, KC_MINS,  KC_EQL, KC_BSPC,
         KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T, KC_LCBR,           KC_RCBR,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,  KC_DEL,
         KC_GRV,MT(MOD_LSFT,KC_A),MT(MOD_LCTL,KC_S),MT(MOD_LALT,KC_D),LT(2,KC_F),LT(3,KC_G),
         											   LT(3,KC_H),LT(2,KC_J),MT(MOD_RALT,KC_K),MT(MOD_RCTL,KC_L),MT(MOD_RSFT,KC_SCLN),KC_BSLS,
@@ -36,7 +36,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [1] = LAYOUT_ergodox_pretty(
-       _______,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,               KC_7,    KC_8,    KC_9,    KC_0, _______, _______, _______,
+//       _______,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,               KC_7,    KC_8,    KC_9,    KC_0, _______, _______, _______,
+       _______, KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC, KC_CIRC,            KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, _______, _______, _______,
        _______, _______, _______, _______, _______, _______, _______,            _______, _______, _______, _______, _______, _______, _______,
        _______, _______, _______, _______, _______, _______,                              _______, _______, _______, _______, _______, _______,
        _______, _______, _______, _______, _______, _______, _______,            _______, _______, _______, _______, _______, _______, _______,
@@ -69,8 +70,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     )
 };
 
-//const key_override_t l_paren_key_override = ko_make_with_layers(MOD_MASK_SHIFT, KC_LPRN, KC_LT, 1);
-//const key_override_t r_paren_key_override = ko_make_with_layers(MOD_MASK_SHIFT, KC_RPRN, KC_GT, 1);
+const key_override_t l_paren_key_override = ko_make_with_layers(MOD_MASK_SHIFT, KC_LPRN, KC_LT, 1);
+const key_override_t r_paren_key_override = ko_make_with_layers(MOD_MASK_SHIFT, KC_RPRN, KC_GT, 1);
 
 const key_override_t l_brace_key_override = ko_make_basic(MOD_MASK_SHIFT, KC_LCBR, KC_LBRC);
 const key_override_t r_brace_key_override = ko_make_basic(MOD_MASK_SHIFT, KC_RCBR, KC_RBRC);
@@ -83,13 +84,12 @@ const key_override_t kc_5_key_override = ko_make_basic(MOD_MASK_SHIFT, KC_PERC, 
 const key_override_t kc_6_key_override = ko_make_basic(MOD_MASK_SHIFT, KC_CIRC, KC_6);
 const key_override_t kc_7_key_override = ko_make_basic(MOD_MASK_SHIFT, KC_AMPR, KC_7);
 const key_override_t kc_8_key_override = ko_make_basic(MOD_MASK_SHIFT, KC_ASTR, KC_8);
-const key_override_t kc_9_key_override = ko_make_basic(MOD_MASK_SHIFT, KC_LPRN, KC_9);
-const key_override_t kc_0_key_override = ko_make_basic(MOD_MASK_SHIFT, KC_RPRN, KC_0);
+const key_override_t kc_9_key_override = ko_make_with_layers(MOD_MASK_SHIFT, KC_LPRN, KC_9, ~1);
+const key_override_t kc_0_key_override = ko_make_with_layers(MOD_MASK_SHIFT, KC_RPRN, KC_0, ~1);
 
-// This globally defines all key overrides to be used
 const key_override_t *key_overrides[] = {
-//	&l_paren_key_override,
-//	&r_paren_key_override,
+	&l_paren_key_override,
+	&r_paren_key_override,
 	&l_brace_key_override,
 	&r_brace_key_override,
     &kc_1_key_override,
