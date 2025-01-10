@@ -56,6 +56,62 @@ led_config_t g_led_config = {
     }
 };
 // clang-format on
+
+bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+	// rgb_config_t rgb_matrix_config;
+
+    if (rgb_matrix_config.mode > 1) {
+        return true;
+    }
+
+    // fav hue 23 * 8
+    // nav for fav hue 2 * 8
+    const hsv_t hsv = rgb_matrix_config.hsv;
+    const rgb_t rgb = hsv_to_rgb(hsv);
+
+    const rgb_t hl_rgb = hsv_to_rgb((hsv_t){hsv.h, 0, hsv.v});
+    const rgb_t desat_rgb = hsv_to_rgb((hsv_t){hsv.h, hsv.s - 8*RGB_MATRIX_SAT_STEP, hsv.v});
+    const rgb_t nav_rgb = hsv_to_rgb((hsv_t){hsv.h - 21*RGB_MATRIX_HUE_STEP, hsv.s, hsv.v});
+    const rgb_t ctrl_rgb = hsv_to_rgb((hsv_t){hsv.h - 3*RGB_MATRIX_HUE_STEP, hsv.s, hsv.v});
+
+    // numbers: 1 <= i < 7; 46 <= i < 50
+    // FN keys: 1 <= i < 7; 44 <= i < 50
+    // FN keys 2nd row: 8 <= i < 13; 51 <= i < 56
+	// arrows cluster: 68, 70, 71, 72
+	// underglow left: 38 <= i < 43
+	// underglow right: 81 <= i < 86
+    // thumb cluster left: 32 <= i < 38 // starts at 'space', goes to bottom corner, then far corner, finally 1 up
+    // thumb cluster right: 75 <= i < 81 // starts at 'space', goes to bottom corner, then far corner, finally 1 up
+
+    for (int i = led_min; i < led_max; i++) {
+        rgb_t i_color = rgb;
+        // control layer
+        if ((i == 0 || (i >= 34 && i < 38) || (i >= 75 && i < 81)) && layer_state & (1 << 3)) {
+            i_color = ctrl_rgb;
+        } else if ((i >= 1 && i < 7) || (i >= 46 && i < 50)) {
+            // fn
+            if (layer_state & (1 << 2)) {
+                i_color = hl_rgb;
+            // numbers
+            } else if (layer_state & (1 << 1)) {
+                i_color = desat_rgb;
+            // symbols
+            } else {
+                i_color = nav_rgb;
+            }
+        // fn
+        } else if (i >= 44 && i < 46 && layer_state & (1 << 2)) {
+            i_color = hl_rgb;
+        // arrows
+        } else if (i == 68 || i == 70 || i == 71 || i == 72) {
+            i_color = nav_rgb;
+        }
+        RGB_MATRIX_INDICATOR_SET_COLOR(i, i_color.r, i_color.g, i_color.b);
+    }
+
+    return false;
+}
+
 #endif
 
 #ifdef OLED_ENABLE

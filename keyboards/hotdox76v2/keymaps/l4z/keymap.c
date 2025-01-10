@@ -69,8 +69,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     )
 };
 
-//const key_override_t l_paren_key_override = ko_make_basic(MOD_MASK_SHIFT, KC_LPRN, KC_LT);
-//const key_override_t r_paren_key_override = ko_make_basic(MOD_MASK_SHIFT, KC_RPRN, KC_GT);
+//const key_override_t l_paren_key_override = ko_make_with_layers(MOD_MASK_SHIFT, KC_LPRN, KC_LT, 1);
+//const key_override_t r_paren_key_override = ko_make_with_layers(MOD_MASK_SHIFT, KC_RPRN, KC_GT, 1);
 
 const key_override_t l_brace_key_override = ko_make_basic(MOD_MASK_SHIFT, KC_LCBR, KC_LBRC);
 const key_override_t r_brace_key_override = ko_make_basic(MOD_MASK_SHIFT, KC_RCBR, KC_RBRC);
