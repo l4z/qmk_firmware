@@ -82,6 +82,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     )
 };
 
+#ifdef KEY_OVERRIDE_ENABLE
+
 const key_override_t l_paren_key_override = ko_make_with_layers(MOD_MASK_SHIFT, KC_LPRN, KC_LT, 1);
 const key_override_t r_paren_key_override = ko_make_with_layers(MOD_MASK_SHIFT, KC_RPRN, KC_GT, 1);
 
@@ -115,6 +117,8 @@ const key_override_t *key_overrides[] = {
     &kc_9_key_override,
     &kc_0_key_override
 };
+
+#endif
 
 #ifdef RGB_MATRIX_ENABLE
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
@@ -218,6 +222,7 @@ void render_kb_state(void) {
     uint8_t len = 10;
     uint8_t gap_w = 2;
     switch (state_to_show) {
+#ifdef KEY_OVERRIDE_ENABLE
         case KEY_OVERRIDES:
             bool en = key_override_is_enabled();
             oled_show(0, PSTR("KEY OVRDS:"), gap_w, len, 10, true);
@@ -227,14 +232,15 @@ void render_kb_state(void) {
                 oled_show(1, PSTR("OFF"), gap_w + 10, len - 1, 3, true);
             }
             return;
-#    ifdef DYNAMIC_TAPPING_TERM_ENABLE
+#endif
+#ifdef DYNAMIC_TAPPING_TERM_ENABLE
         case DT_TERM:
             oled_show(0, PSTR("DT TERM:"), gap_w, len, 8, true);
             static char value_line[9];
             int actual_length = sprintf(value_line, "%dms", g_tapping_term);
             oled_show(1, value_line, gap_w + 10, len - 1, actual_length, false);
             return;
-#    endif
+#endif
         default:
             oled_show(0, PSTR("!Unhandled"), gap_w, len, 10, true);
             oled_show(1, PSTR(""), gap_w, len, 0, true);
@@ -281,6 +287,7 @@ bool oled_task_user(void) {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
+#ifdef KEY_OVERRIDE_ENABLE
         case KO_TOGG:
         case KO_ON:
         case KO_OFF:
@@ -288,7 +295,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 state_to_show = KEY_OVERRIDES;
             }
         return true;
-#    ifdef DYNAMIC_TAPPING_TERM_ENABLE
+#endif
+#ifdef DYNAMIC_TAPPING_TERM_ENABLE
         case DT_PRNT:
         case DT_UP:
         case DT_DOWN:
@@ -296,7 +304,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 state_to_show = DT_TERM;
             }
         return true;
-#    endif
+#endif
         default:
             return true;
     }
