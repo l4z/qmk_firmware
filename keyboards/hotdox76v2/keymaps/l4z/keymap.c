@@ -152,7 +152,7 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     const rgb_t less_rgb = hsv_to_rgb((hsv_t){hsv.h - 43, hsv.s, hsv.v});
     const rgb_t more_rgb = hsv_to_rgb((hsv_t){hsv.h + 107, hsv.s, hsv.v});
     
-    const rgb_t homerow_rgb = hsv_to_rgb((hsv_t){hsv.h - 16, hsv.s, hsv.v});
+    const rgb_t homerow_rgb = hsv_to_rgb((hsv_t){hsv.h - 25, hsv.s, hsv.v});
 
     const uint8_t mod_state = get_mods();
 
